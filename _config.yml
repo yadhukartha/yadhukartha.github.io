@@ -1,10 +1,10 @@
 # Site settings
-title:       Viraj Prabhu
-email:       virajp@gatech.edu
-author:      Viraj Prabhu
-description: "Viraj Prabhu's resume website."
+title:       Yadhu Kartha
+email:       yadhukartha@gatech.edu
+author:      Yadhu Kartha
+description: "Yadhu Kartha's resume website."
 baseurl:     ""
-url:         "http://virajprabhu.github.io"
+url:         "http://yadhukartha.github.io/"
 date_format: "%b %-d, %Y"
 
 # Google services
@@ -42,14 +42,14 @@ facebook_appid:
 facebook_comments_number: 10
 
 # Social icons
-github_username: virajprabhu
+github_username: yadhukartha
 bitbucket_username:
 stackoverflow_id:
-twitter_username: virprabh
+twitter_username: yadhu_kartha
 skype_username:
 steam_nickname:
 google_plus_id:
-linkedin_username: viraj-prabhu-0a2a9435
+linkedin_username: yadhu-k-72b097187
 angellist_username:
 medium_id:
 bitcoin_url:
