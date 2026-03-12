@@ -1,99 +1,855 @@
----
-layout: default
-tags: about
----
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script type="text/javascript">
-  function readMore() {
-    $('#readMore').hide();
-    $('#more').show();
-  }
-  function readLess() {
-    $('#readMore').show();
-    $('#more').hide();
-  }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yadhu Kartha</title>
+    <meta name="description" content="Yadhu Kartha — ML PhD student at Georgia Tech researching generative models and AI for understanding profound autism.">
+    <meta property="og:title" content="Yadhu Kartha">
+    <meta property="og:description" content="ML PhD student at Georgia Tech. Generative models & AI for profound autism research.">
+    <meta property="og:url" content="https://yadhukartha.github.io">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+    <style>
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+        :root {
+            --bg: #111110;
+            --bg-elevated: #1a1a18;
+            --surface: #222220;
+            --text: #e8e4dd;
+            --text-muted: #9a9689;
+            --accent: #c8a24e;
+            --accent-dim: #a07e2e;
+            --accent-glow: rgba(200,162,78,0.12);
+            --serif: 'Instrument Serif', Georgia, serif;
+            --sans: 'DM Sans', system-ui, sans-serif;
+            --grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-weight: 300;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: var(--grain);
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        ::selection {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        a:hover { color: var(--text); }
+
+        /* ============ NAV ============ */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(20px);
+            background: rgba(17,17,16,0.7);
+            border-bottom: 1px solid rgba(200,162,78,0.06);
+            transition: transform 0.4s ease;
+        }
+
+        .nav-name {
+            font-family: var(--serif);
+            font-size: 1.35rem;
+            color: var(--text);
+            letter-spacing: -0.01em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            font-weight: 400;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover { color: var(--text); }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* ============ HERO ============ */
+        .hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            position: relative;
+        }
+
+        .hero-photo {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            filter: contrast(1.05) brightness(0.95);
+            transition: transform 8s ease;
+        }
+
+        .hero-photo:hover img {
+            transform: scale(1.03);
+        }
+
+        .hero-photo::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, transparent 60%, var(--bg) 100%);
+        }
+
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 6rem 5rem 6rem 3rem;
+            position: relative;
+        }
+
+        .hero-label {
+            font-size: 0.72rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.3s forwards;
+        }
+
+        .hero-title {
+            font-family: var(--serif);
+            font-size: clamp(2.8rem, 5vw, 4.5rem);
+            font-weight: 400;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.5s forwards;
+        }
+
+        .hero-title em {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        .hero-desc {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            max-width: 420px;
+            margin-bottom: 2.5rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.7s forwards;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.9s forwards;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.8rem;
+            font-family: var(--sans);
+            font-size: 0.82rem;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            border: 1px solid var(--accent-dim);
+            color: var(--accent);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.35s ease;
+        }
+
+        .btn:hover {
+            background: var(--accent);
+            color: var(--bg);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(200,162,78,0.2);
+        }
+
+        .btn-filled {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .btn-filled:hover {
+            background: var(--text);
+            border-color: var(--text);
+            color: var(--bg);
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 3rem;
+            right: 3rem;
+            writing-mode: vertical-rl;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            opacity: 0;
+            animation: fadeIn 1s ease 1.5s forwards;
+        }
+
+        .scroll-hint::after {
+            content: '';
+            display: block;
+            width: 1px;
+            height: 50px;
+            background: var(--accent-dim);
+            margin-top: 1rem;
+            margin-left: auto;
+            margin-right: auto;
+            animation: scrollLine 2s ease infinite;
+        }
+
+        /* ============ SECTIONS ============ */
+        section {
+            padding: 7rem 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: var(--serif);
+            font-size: clamp(2rem, 3.5vw, 3rem);
+            font-weight: 400;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin-bottom: 3rem;
+        }
+
+        .section-divider {
+            width: 60px;
+            height: 1px;
+            background: var(--accent-dim);
+            margin-bottom: 3rem;
+        }
+
+        /* ============ ABOUT ============ */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .about-text p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-text p strong {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .about-sidebar {
+            border-left: 1px solid rgba(200,162,78,0.15);
+            padding-left: 2rem;
+        }
+
+        .about-sidebar h4 {
+            font-family: var(--serif);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .about-sidebar ul {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .about-sidebar li {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            padding: 0.3rem 0;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        .about-sidebar li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 4px;
+            height: 4px;
+            background: var(--accent-dim);
+            border-radius: 50%;
+        }
+
+        /* ============ JOURNEY ============ */
+        .journey-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .journey-card {
+            background: var(--bg-elevated);
+            border: 1px solid rgba(200,162,78,0.06);
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .journey-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .journey-card:hover {
+            border-color: rgba(200,162,78,0.15);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .journey-card:hover::before { opacity: 1; }
+
+        .journey-card-logo {
+            height: 45px;
+            margin-bottom: 1.2rem;
+            filter: grayscale(1) brightness(1.8);
+            opacity: 0.7;
+            transition: all 0.4s ease;
+            object-fit: contain;
+        }
+
+        .journey-card:hover .journey-card-logo {
+            filter: grayscale(0) brightness(1);
+            opacity: 1;
+        }
+
+        .journey-card h3 {
+            font-family: var(--serif);
+            font-size: 1.15rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .journey-card .role {
+            font-size: 0.88rem;
+            color: var(--accent);
+            margin-bottom: 0.6rem;
+        }
+
+        .journey-card .period {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+
+        /* ============ RESEARCH ============ */
+        .research-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .research-area {
+            background: var(--bg-elevated);
+            border: 1px solid rgba(200,162,78,0.06);
+            padding: 2.5rem;
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .research-area:hover {
+            border-color: rgba(200,162,78,0.15);
+        }
+
+        .research-area h3 {
+            font-family: var(--serif);
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .research-area p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .research-number {
+            font-family: var(--serif);
+            font-size: 4rem;
+            color: rgba(200,162,78,0.08);
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            line-height: 1;
+        }
+
+        /* ============ CONTACT ============ */
+        .contact-section {
+            text-align: center;
+            padding: 8rem 3rem;
+            position: relative;
+        }
+
+        .contact-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .contact-section .section-title {
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-desc {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 500px;
+            margin: 0 auto 2.5rem;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.8rem 1.5rem;
+            border: 1px solid rgba(200,162,78,0.15);
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            transition: all 0.35s ease;
+        }
+
+        .contact-link svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+
+        .contact-link:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(200,162,78,0.1);
+        }
+
+        /* ============ FOOTER ============ */
+        footer {
+            text-align: center;
+            padding: 2rem 3rem;
+            border-top: 1px solid rgba(200,162,78,0.06);
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            letter-spacing: 0.05em;
+        }
+
+        /* ============ ANIMATIONS ============ */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scrollLine {
+            0% { transform: scaleY(0); transform-origin: top; }
+            50% { transform: scaleY(1); transform-origin: top; }
+            51% { transform-origin: bottom; }
+            100% { transform: scaleY(0); transform-origin: bottom; }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ============ MOBILE NAV ============ */
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            width: 28px;
+            height: 20px;
+            position: relative;
+            z-index: 110;
+        }
+
+        .nav-toggle span {
+            display: block;
+            width: 100%;
+            height: 1.5px;
+            background: var(--text);
+            position: absolute;
+            left: 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-toggle span:nth-child(1) { top: 0; }
+        .nav-toggle span:nth-child(2) { top: 50%; transform: translateY(-50%); }
+        .nav-toggle span:nth-child(3) { bottom: 0; }
+
+        .nav-toggle.active span:nth-child(1) { top: 50%; transform: translateY(-50%) rotate(45deg); }
+        .nav-toggle.active span:nth-child(2) { opacity: 0; }
+        .nav-toggle.active span:nth-child(3) { bottom: 50%; transform: translateY(50%) rotate(-45deg); }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 900px) {
+            nav { padding: 1.2rem 1.5rem; }
+
+            .nav-toggle { display: block; }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: 0;
+                width: 280px;
+                height: 100vh;
+                background: var(--bg-elevated);
+                flex-direction: column;
+                padding: 5rem 2rem 2rem;
+                gap: 1.5rem;
+                transform: translateX(100%);
+                transition: transform 0.4s ease;
+                border-left: 1px solid rgba(200,162,78,0.1);
+            }
+
+            .nav-links.open { transform: translateX(0); }
+
+            .hero {
+                grid-template-columns: 1fr;
+                min-height: auto;
+            }
+
+            .hero-photo { height: 60vh; }
+
+            .hero-content {
+                padding: 3rem 1.5rem 4rem;
+            }
+
+            .hero-title { font-size: 2.4rem; }
+
+            section { padding: 4rem 1.5rem; }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .about-sidebar {
+                border-left: none;
+                border-top: 1px solid rgba(200,162,78,0.15);
+                padding-left: 0;
+                padding-top: 2rem;
+            }
+
+            .research-content {
+                grid-template-columns: 1fr;
+            }
+
+            .journey-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .scroll-hint { display: none; }
+
+            .contact-links {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+    <a href="#" class="nav-name">Yadhu Kartha</a>
+    <button class="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#journey">Journey</a></li>
+        <li><a href="#research">Research</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" style="max-width:none; padding:0;">
+    <div class="hero-photo">
+        <img src="images/IMG_20190701_195513_233.jpg" alt="Yadhu Kartha">
+    </div>
+    <div class="hero-content">
+        <p class="hero-label">PhD Student &middot; Georgia Tech</p>
+        <h1 class="hero-title">Building <em>AI</em> that<br>understands us</h1>
+        <p class="hero-desc">Researching generative models and AI networks for detecting, understanding, and analyzing profound autism at the VITAL Lab.</p>
+        <div class="hero-actions">
+            <a href="#research" class="btn btn-filled">My Research</a>
+            <a href="#contact" class="btn">Get in Touch</a>
+        </div>
+        <span class="scroll-hint">Scroll</span>
+    </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="reveal">
+    <p class="section-label">About</p>
+    <h2 class="section-title">A bit about me</h2>
+    <div class="section-divider"></div>
+    <div class="about-grid">
+        <div class="about-text">
+            <p>I'm a <strong>third-year ML PhD student</strong> at Georgia Tech in the <a href="https://kwonvitallab.github.io/">VITAL Lab</a>, advised by <a href="https://kwonvitallab.github.io/members/hyeok-kwon.html">Hyeokhyen Kwon</a>. My work sits at the intersection of generative modeling and healthcare AI — specifically developing systems that can detect, understand, and analyze <strong>profound autism</strong>.</p>
+            <p>Before Georgia Tech, I earned my Bachelor's in Mechanical Engineering from <a href="https://www.iitism.ac.in/">IIT Dhanbad</a>. During undergrad, I had the chance to work on research problems across some incredible labs — from machine learning methods for sorting protein traces to building surrogate models for image processing.</p>
+            <p>Outside the lab, you'll find me running, on the badminton court, reading, or making noise on guitar and drums.</p>
+        </div>
+        <div class="about-sidebar">
+            <h4>Interests</h4>
+            <ul>
+                <li>Generative Models</li>
+                <li>Healthcare AI</li>
+                <li>Behavioral Analysis</li>
+                <li>Computer Vision</li>
+            </ul>
+            <h4>When Not Researching</h4>
+            <ul>
+                <li>Running</li>
+                <li>Badminton</li>
+                <li>Guitar &amp; Drums</li>
+                <li>Reading</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- JOURNEY -->
+<section id="journey" class="reveal">
+    <p class="section-label">Journey</p>
+    <h2 class="section-title">Where I've been</h2>
+    <div class="section-divider"></div>
+    <div class="journey-grid">
+        <div class="journey-card">
+            <img src="images/gt.jpg" alt="Georgia Tech" class="journey-card-logo">
+            <h3>Georgia Tech</h3>
+            <p class="role">PhD, Machine Learning</p>
+            <p class="period">Fall 2022 &mdash; Present</p>
+        </div>
+        <div class="journey-card">
+            <img src="images/iitism.jpg" alt="IIT Dhanbad" class="journey-card-logo">
+            <h3>IIT Dhanbad</h3>
+            <p class="role">B.Tech, Mechanical Engineering</p>
+            <p class="period">2018 &mdash; 2022</p>
+        </div>
+        <div class="journey-card">
+            <img src="images/mit.png" alt="MIT" class="journey-card-logo">
+            <h3>MIT</h3>
+            <p class="role">Research Intern</p>
+            <p class="period">2020 &mdash; 2022</p>
+        </div>
+        <div class="journey-card">
+            <img src="images/upenn.png" alt="UPenn" class="journey-card-logo">
+            <h3>University of Pennsylvania</h3>
+            <p class="role">Research Intern</p>
+            <p class="period">2021 &mdash; 2022</p>
+        </div>
+        <div class="journey-card">
+            <img src="images/purdue.png" alt="Purdue" class="journey-card-logo">
+            <h3>Purdue University</h3>
+            <p class="role">Research Intern</p>
+            <p class="period">2021 &mdash; 2022</p>
+        </div>
+    </div>
+</section>
+
+<!-- RESEARCH -->
+<section id="research" class="reveal">
+    <p class="section-label">Research</p>
+    <h2 class="section-title">What I work on</h2>
+    <div class="section-divider"></div>
+    <div class="research-content">
+        <div class="research-area">
+            <span class="research-number">01</span>
+            <h3>Generative Models for Autism</h3>
+            <p>Developing generative AI systems that can detect and analyze behavioral patterns in profound autism, creating tools that help clinicians and researchers better understand this condition.</p>
+        </div>
+        <div class="research-area">
+            <span class="research-number">02</span>
+            <h3>AI-Driven Behavioral Analysis</h3>
+            <p>Building neural network architectures that can process and interpret complex behavioral data, bridging the gap between raw observation and clinical insight.</p>
+        </div>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section reveal" style="max-width: 1200px;">
+    <p class="section-label">Contact</p>
+    <h2 class="section-title">Let's connect</h2>
+    <p class="contact-desc">I'm always happy to discuss research or grad school applications and life. Feel free to reach out.</p>
+    <div class="contact-links">
+        <a href="mailto:yadhukartha@gatech.edu" class="contact-link">
+            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            Email
+        </a>
+        <a href="https://github.com/yadhukartha" class="contact-link" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            GitHub
+        </a>
+        <a href="https://scholar.google.com/citations?hl=en&user=9KpSmkEAAAAJ" class="contact-link" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M5.242 13.769L0 9.5 12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5c-2.977 0-5.548 1.748-6.758 4.269zM12 10a7 7 0 100 14 7 7 0 000-14z"/></svg>
+            Google Scholar
+        </a>
+        <a href="https://www.linkedin.com/in/yadhu-k-72b097187" class="contact-link" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            LinkedIn
+        </a>
+        <a href="https://twitter.com/yadhu_kartha" class="contact-link" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            X / Twitter
+        </a>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    &copy; 2026 Yadhu Kartha
+</footer>
+
+<script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+
+    // Mobile nav toggle
+    const toggle = document.querySelector('.nav-toggle');
+    const links = document.querySelector('.nav-links');
+    toggle.addEventListener('click', () => {
+        toggle.classList.toggle('active');
+        links.classList.toggle('open');
+    });
+
+    // Close mobile nav on link click
+    document.querySelectorAll('.nav-links a').forEach(a => {
+        a.addEventListener('click', () => {
+            toggle.classList.remove('active');
+            links.classList.remove('open');
+        });
+    });
+
+    // Nav hide on scroll down, show on scroll up
+    let lastScroll = 0;
+    const nav = document.querySelector('nav');
+    window.addEventListener('scroll', () => {
+        const current = window.scrollY;
+        if (current > lastScroll && current > 100) {
+            nav.style.transform = 'translateY(-100%)';
+        } else {
+            nav.style.transform = 'translateY(0)';
+        }
+        lastScroll = current;
+    });
 </script>
 
-<img src="{{ site.baseurl }}/images/IMG_20190701_195513_233.jpg" alt="Yadhu Kartha" width="240"
-  style="float: right; padding: 20px; border-radius: 0%;" />
-
-<div class="bio" style="text-align:justify">
-
-  <p>I am a third year ML Ph.D. student at Georgia Tech in the <a href="https://kwonvitallab.github.io/" class="uline">VITAL lab</a> , advised by  <a href="https://kwonvitallab.github.io/members/hyeok-kwon.html" class="uline">Hyeokhyen Kwon</a>. My research interests are in developing generative models and AI networks for detecing, understanding and analyzing profound autism.
-
-  <p>I received my Bachelor's degree in Mechanical Engineering from <a href="https://www.iitism.ac.in/iitismnew/" class="uline">IIT Dhanbad</a>. Over the course of my undergrad, I was fortunate to undertake research internships at <a
-      href="https://www.mit.edu/" class="uline">MIT</a>, <a href="https://www.upenn.edu/"
-      class="uline">UPenn</a>, <a href="https://www.gatech.edu/" class="uline">Gatech</a>, and <a href="https://www.purdue.edu/" class="uline">Purdue</a> , where I
-    worked on problems ranging from machine learning methods for sorting protein traces to developing surrogate model for image processing.</p>
-  <p> Apart from work, I enjoy running , badmintion, reading, playing the guitar, and drums.</p>
-
-  <p><b>Contact</b>: I'm always happy to discuss research or grad school applications/life! Feel free to email me at <a
-      href="mailto:yadhukartha@gatech.edu" class="uline">yadhukartha@gatech.edu</a>.</p>
-
-  <br />
-
-  <div class="container">
-    <div class="row" style="text-align:center;">
-      <div class="col-4">
-        <div class="row">
-          <div class="col-6">
-            <a href="https://www.iitism.ac.in/iitismnew/"><img src="images/iitism.jpg" style="max-height:150px;width:80%"></a>
-          </div>
-          <div class="col-6">
-            <a href="https://www.gatech.edu/"><img src="images/gt.jpg" style="max-height:150px;width:80%"></a>
-          </div>
-        </div>
-      </div>
-      <div class="col-8">
-        <div class="row" style="text-align:center;">
-          <div class="col-3">
-            <a href="https://www.mit.edu/"><img src="images/mit.png" style="width:80%;max-height:150px"></a>
-          </div>
-          <div class="col-3">
-            <a href="https://www.upenn.edu/"><img src="images/upenn.png" style="width:80%;max-height:150px"></a>
-          </div>
-          <div class="col-3">
-            <a href="https://www.purdue.edu/"><img src="images/purdue.png" style="width:80%;max-height:150px"></a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row" style="text-align:center;">
-      <div class="col-4">
-        <div class="row">
-          <div class="col-6">
-            <div style="padding:10px">
-              <h6>July 2018-july 2022</h6>
-            </div>
-          </div>
-          <div class="col-6">
-            <div style="padding:10px">
-              <h6>Fall 2022-current</h6>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-8">
-        <div class="row" style="text-align:center;">
-          <div class="col-3">
-            <div style="padding:10px">
-              <h6>Fall 2020- Summer 2022</h6>
-            </div>
-          </div>
-          <div class="col-3">
-            <div style="padding:10px">
-              <h6>Fall 2021- Summer 2022</h6>
-            </div>
-          </div>
-          <div class="col-3">
-            <div style="padding:10px">
-              <h6>Fall 2021- Summer 2022</h6>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-</div>
-
+</body>
+</html>
